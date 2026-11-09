@@ -16,6 +16,10 @@ sentences = [
     for text in df["clean_text"]
 ]
 
+# Check if the dataset contains valid tweets
+if not sentences:
+    raise ValueError("No valid tweets found in the cleaned dataset.")
+
 # 3. Add sentence boundary markers
 # <s>  = Start of sentence
 # </s> = End of sentence
@@ -112,7 +116,10 @@ print(f"\nP(Tweet) = {tweet_probability:.12g}")
 # Log Probability helps represent very small probabilities
 # without numerical underflow.
 
-log_probability = sum(log(p) for p in probabilities if p > 0)
+if any(p == 0 for p in probabilities):
+    log_probability = float("-inf")
+else:
+    log_probability = sum(log(p) for p in probabilities)
 
 print(f"Log Probability = {log_probability:.6f}")
 
